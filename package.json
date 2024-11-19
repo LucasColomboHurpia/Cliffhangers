@@ -1,5 +1,5 @@
 {
-  "homepage": "https://sergioDiorov.github.io/cliffhangers",
+  "homepage": "https://github.com/LucasColomboHurpia/Cliffhangers",
   "name": "cliffhangers",
   "version": "0.1.0",
   "private": true,
@@ -45,7 +45,7 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.1.1",
+    "gh-pages": "^6.2.0",
     "tailwindcss": "^3.4.10"
   }
 }
