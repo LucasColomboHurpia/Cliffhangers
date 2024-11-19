@@ -290,26 +290,26 @@ const GameScreen = () => {
         outerRocksSize && outerRocksSize.width > 2000
           ? adjustedDistance + 9
           : outerRocksSize && outerRocksSize.width > 1900
-          ? adjustedDistance + 8
-          : outerRocksSize && outerRocksSize.width > 1800
-          ? adjustedDistance + 7
-          : outerRocksSize && outerRocksSize.width > 1700
-          ? adjustedDistance + 6
-          : outerRocksSize && outerRocksSize.width > 1600
-          ? adjustedDistance + 5
-          : outerRocksSize && outerRocksSize.width > 1500
-          ? adjustedDistance + 5
-          : outerRocksSize && outerRocksSize.width > 1400
-          ? adjustedDistance + 4
-          : outerRocksSize && outerRocksSize.width > 1300
-          ? adjustedDistance + 3
-          : outerRocksSize && outerRocksSize.width > 1200
-          ? adjustedDistance + 3
-          : outerRocksSize && outerRocksSize.width > 1100
-          ? adjustedDistance + 4
-          : outerRocksSize && outerRocksSize.width > 1000
-          ? adjustedDistance + 2
-          : adjustedDistance + 3;
+            ? adjustedDistance + 8
+            : outerRocksSize && outerRocksSize.width > 1800
+              ? adjustedDistance + 7
+              : outerRocksSize && outerRocksSize.width > 1700
+                ? adjustedDistance + 6
+                : outerRocksSize && outerRocksSize.width > 1600
+                  ? adjustedDistance + 5
+                  : outerRocksSize && outerRocksSize.width > 1500
+                    ? adjustedDistance + 5
+                    : outerRocksSize && outerRocksSize.width > 1400
+                      ? adjustedDistance + 4
+                      : outerRocksSize && outerRocksSize.width > 1300
+                        ? adjustedDistance + 3
+                        : outerRocksSize && outerRocksSize.width > 1200
+                          ? adjustedDistance + 3
+                          : outerRocksSize && outerRocksSize.width > 1100
+                            ? adjustedDistance + 4
+                            : outerRocksSize && outerRocksSize.width > 1000
+                              ? adjustedDistance + 2
+                              : adjustedDistance + 3;
 
       setRightLimit(reightLimit);
 
@@ -321,38 +321,38 @@ const GameScreen = () => {
       const koeficient = !outerRocksSize
         ? 0.97
         : outerRocksSize.width > 0 && outerRocksSize.width <= 700
-        ? 0.98
-        : outerRocksSize.width > 700 && outerRocksSize.width <= 800
-        ? 0.99
-        : outerRocksSize.width > 800 && outerRocksSize.width <= 1080
-        ? 1
-        : outerRocksSize.width > 1080 && outerRocksSize.width <= 1320
-        ? 1.007
-        : outerRocksSize.width > 1320 && outerRocksSize.width <= 1324
-        ? 1.014
-        : outerRocksSize.width > 1324 && outerRocksSize.width <= 1500
-        ? 1.01
-        : outerRocksSize.width > 1500 && outerRocksSize.width <= 1600
-        ? 1.012
-        : outerRocksSize.width > 1600 && outerRocksSize.width <= 1820
-        ? 1.015
-        : outerRocksSize.width > 1820 && outerRocksSize.width <= 1900
-        ? 1.017
-        : outerRocksSize.width > 1900 && outerRocksSize.width <= 2000
-        ? 1.0171
-        : outerRocksSize.width > 2000 && outerRocksSize.width <= 2400
-        ? 1.0175
-        : outerRocksSize.width > 2400 && outerRocksSize.width <= 2560
-        ? 1.018
-        : outerRocksSize.width > 2560 && outerRocksSize.width <= 2800
-        ? 1.024
-        : outerRocksSize.width > 2800 && outerRocksSize.width <= 3000
-        ? 1.025
-        : outerRocksSize.width > 3000 && outerRocksSize.width <= 3200
-        ? 1.026
-        : outerRocksSize.width > 3200 && outerRocksSize.width <= 4000
-        ? 1.028
-        : 1.03;
+          ? 0.98
+          : outerRocksSize.width > 700 && outerRocksSize.width <= 800
+            ? 0.99
+            : outerRocksSize.width > 800 && outerRocksSize.width <= 1080
+              ? 1
+              : outerRocksSize.width > 1080 && outerRocksSize.width <= 1320
+                ? 1.007
+                : outerRocksSize.width > 1320 && outerRocksSize.width <= 1324
+                  ? 1.014
+                  : outerRocksSize.width > 1324 && outerRocksSize.width <= 1500
+                    ? 1.01
+                    : outerRocksSize.width > 1500 && outerRocksSize.width <= 1600
+                      ? 1.012
+                      : outerRocksSize.width > 1600 && outerRocksSize.width <= 1820
+                        ? 1.015
+                        : outerRocksSize.width > 1820 && outerRocksSize.width <= 1900
+                          ? 1.017
+                          : outerRocksSize.width > 1900 && outerRocksSize.width <= 2000
+                            ? 1.0171
+                            : outerRocksSize.width > 2000 && outerRocksSize.width <= 2400
+                              ? 1.0175
+                              : outerRocksSize.width > 2400 && outerRocksSize.width <= 2560
+                                ? 1.018
+                                : outerRocksSize.width > 2560 && outerRocksSize.width <= 2800
+                                  ? 1.024
+                                  : outerRocksSize.width > 2800 && outerRocksSize.width <= 3000
+                                    ? 1.025
+                                    : outerRocksSize.width > 3000 && outerRocksSize.width <= 3200
+                                      ? 1.026
+                                      : outerRocksSize.width > 3200 && outerRocksSize.width <= 4000
+                                        ? 1.028
+                                        : 1.03;
 
       const moveForBigScreen = !outerRocksSize ? 0 : 3;
 
@@ -361,9 +361,9 @@ const GameScreen = () => {
       const startPoint = startPointContext
         ? startPointContext
         : yodelyGuyRect.left +
-          yodelyGuyRect.width / 2 -
-          gameBackgroundRect.left -
-          moveForBigScreen;
+        yodelyGuyRect.width / 2 -
+        gameBackgroundRect.left -
+        moveForBigScreen;
 
       !startPointContext && setStartPointContext(startPoint);
 
@@ -381,10 +381,10 @@ const GameScreen = () => {
           outerRocksSize && outerRocksSize.width > 2800
             ? pointsObject[25] - 6
             : outerRocksSize && outerRocksSize.width > 2000
-            ? pointsObject[25] - 8
-            : outerRocksSize && outerRocksSize.width > 1600
-            ? pointsObject[25] - 3
-            : pointsObject[25] - 2.5,
+              ? pointsObject[25] - 8
+              : outerRocksSize && outerRocksSize.width > 1600
+                ? pointsObject[25] - 3
+                : pointsObject[25] - 2.5,
       });
     }
   }, [
@@ -505,14 +505,27 @@ const GameScreen = () => {
 
   const fallAnimation = falling
     ? {
-        animation: `fall ${
-          Math.abs(positionY - startPositionY) / 100
-        }s ease-out, rotate 1.5s linear`,
-        transition: 'bottom 1.5s ease-out',
-        bottom: `${startPositionY}px`,
-        transform: 'rotate(360deg)',
-      }
+      animation: `fall ${Math.abs(positionY - startPositionY) / 100
+        }s ease-out forwards, rotate 1.5s linear forwards`,
+      transition: 'bottom 1.5s ease-out',
+      bottom: `${startPositionY}px`,
+      transform: 'rotate(360deg)',
+      zIndex: -999,
+    }
     : {};
+
+    useEffect(() => {
+      const yodelyGuy = document.getElementById('yodely-guy');
+      if (yodelyGuy) {
+        console.log('Listener attached');
+        yodelyGuy.addEventListener('animationend', () => {
+          console.log('Animation ended');
+          yodelyGuy.style.opacity = '0';
+        });
+      }
+    }, []);
+    
+
 
   return (
     <div className='relative m-auto w-screen h-screen transition-opacity duration-500 animate-fadeIn'>
@@ -530,8 +543,8 @@ const GameScreen = () => {
           outerRocksSize && outerRocksSize.width >= 2560
             ? OuterRocks2560
             : outerRocksSize && outerRocksSize.width >= 1920
-            ? OuterRocks1920
-            : OuterRocks1366
+              ? OuterRocks1920
+              : OuterRocks1366
         }
         alt='OuterRocks'
         className='w-full absolute bottom-0 left-0 right-0 m-auto z-[42] max-w-screen max-h-[101vh]'
@@ -543,29 +556,29 @@ const GameScreen = () => {
           outerRocksSize && outerRocksSize.width >= 2100
             ? Header2560
             : outerRocksSize && outerRocksSize.width >= 1700
-            ? Header1920
-            : Header1366
+              ? Header1920
+              : Header1366
         }
         style={
           outerRocksSize
             ? {
-                maxWidth:
-                  outerRocksSize && outerRocksSize.width >= 2100
-                    ? 1896
-                    : outerRocksSize && outerRocksSize.width >= 1700
+              maxWidth:
+                outerRocksSize && outerRocksSize.width >= 2100
+                  ? 1896
+                  : outerRocksSize && outerRocksSize.width >= 1700
                     ? 1487
                     : 1067,
-                bottom:
-                  outerRocksSize.height <= 0 ||
+              bottom:
+                outerRocksSize.height <= 0 ||
                   outerRocksSize.height === undefined ||
                   !headerHeight
-                    ? 'auto'
-                    : outerRocksSize.height - headerHeight,
-                opacity:
-                  outerRocksSize.height === undefined || !isMainBgLoaded
-                    ? '0'
-                    : '1',
-              }
+                  ? 'auto'
+                  : outerRocksSize.height - headerHeight,
+              opacity:
+                outerRocksSize.height === undefined || !isMainBgLoaded
+                  ? '0'
+                  : '1',
+            }
             : {}
         }
         alt='Header'
@@ -577,8 +590,8 @@ const GameScreen = () => {
           outerRocksSize && outerRocksSize.width >= 2560
             ? GameBackground2560
             : outerRocksSize && outerRocksSize.width >= 1920
-            ? GameBackground1920
-            : GameBackground1366
+              ? GameBackground1920
+              : GameBackground1366
         }
         style={{
           transform: gameMarginBottom
@@ -591,9 +604,8 @@ const GameScreen = () => {
         onLoad={() => setIsRendered(true)}
       />
       <div
-        className={`absolute bottom-0 left-0 right-0 m-auto w-full h-full z-50 ${
-          !falling && positionY === startPositionY ? '!z-0' : ''
-        }`}
+        className={`absolute bottom-0 left-0 right-0 m-auto w-full h-full z-50 ${!falling && positionY === startPositionY ? '!z-0' : ''
+          }`}
         style={{
           maxWidth: !!gameBackgroundElement?.offsetWidth
             ? gameBackgroundElement.offsetWidth
@@ -612,40 +624,34 @@ const GameScreen = () => {
           src={YellowRulerRotate}
           id='ruler'
           alt='Ruler'
-          style={{
-            opacity: isGameContainerLoaded && isMainBgLoaded ? '1' : '0',
-          }}
-          className={`h-full absolute ${
-            outerRocksSize && outerRocksSize.width >= 2560
+
+          className={`h-full absolute ${outerRocksSize && outerRocksSize.width >= 2560
               ? ' w-[65%] bottom-[14.1%] left-[17.5%]'
               : outerRocksSize && outerRocksSize.width >= 1920
-              ? ' w-[65%] bottom-[14%] left-[17.4%]'
-              : ' w-[65%] bottom-[13.7%] left-[17.3%]'
-          } m-auto z-30 object-contain`}
+                ? ' w-[65%] bottom-[14%] left-[17.4%]'
+                : ' w-[65%] bottom-[13.7%] left-[17.3%]'
+            } m-auto z-30 object-contain`}
         />
         <img
           src={YodelyGuy}
           alt='YodelyGuy'
           id='yodely-guy'
-          className={`absolute yodely-guy z-[100] ${
-            falling ? 'fall rotate' : ''
-          }
-          ${
-            outerRocksSize && outerRocksSize.width >= 2560
+          className={`absolute yodely-guy z-[100] ${falling ? 'fall rotate' : ''
+            }
+          ${outerRocksSize && outerRocksSize.width >= 2560
               ? 'w-[4.8%] left-[17.4%] bottom-[44.8%]'
               : outerRocksSize && outerRocksSize.width >= 1920
-              ? 'w-[4.3%] left-[17.5%] bottom-[44.9%]'
-              : 'w-[4.7%] left-[17.3%] bottom-[44.3%]'
-          }`}
+                ? 'w-[4.3%] left-[17.5%] bottom-[44.9%]'
+                : 'w-[4.7%] left-[17.3%] bottom-[44.3%]'
+            }`}
           style={
             (isGameStarted && positionX !== 0 && positionY !== 0) ||
-            (savedPositionX && savedPositionY)
+              (savedPositionX && savedPositionY)
               ? {
-                  opacity: isGameContainerLoaded && isMainBgLoaded ? '1' : '0',
-                  left: `${positionX}px`,
-                  bottom: `${positionY}px`,
-                  ...fallAnimation,
-                }
+                left: `${positionX}px`,
+                bottom: `${positionY}px`,
+                ...fallAnimation,
+              }
               : {}
           }
         />

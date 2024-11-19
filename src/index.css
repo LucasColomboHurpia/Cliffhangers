@@ -12,3 +12,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #96e3f5;
 }
+
+.ZindexAdjust{
+  z-index: 2;
+}
+
+.ZindexAdjust10{
+  z-index: 10;
+}

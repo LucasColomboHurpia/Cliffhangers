@@ -1,8 +1,9 @@
 @keyframes rotate {
-  0% {
+  from {
     transform: rotate(0deg);
   }
-  70% {
+  to {
     transform: rotate(360deg);
+    opacity: 0;
   }
 }
