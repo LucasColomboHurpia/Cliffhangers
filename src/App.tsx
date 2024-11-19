@@ -6,11 +6,6 @@ import ProdutScreen from './components/ProductScreen/ProdutScreen';
 
 
 
-//////////////////
-
-
-/////////////////
-
 
 const App = () => {
   return (
