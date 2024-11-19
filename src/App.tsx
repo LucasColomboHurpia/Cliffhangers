@@ -9,10 +9,10 @@ import ProdutScreen from './components/ProductScreen/ProdutScreen';
 
 const App = () => {
   return (
-    <Router>
+    <Router basename="/Cliffhangers">
       <Routes>
-        <Route path='/' element={<GameScreen />} />
-        <Route path='/products' element={<ProdutScreen />} />
+        <Route path="/" element={<GameScreen />} />
+        <Route path="/products" element={<ProdutScreen />} />
       </Routes>
     </Router>
   );
