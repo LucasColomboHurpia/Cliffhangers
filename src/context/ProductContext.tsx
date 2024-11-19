@@ -16,7 +16,7 @@ export interface ProductsState {
 
 interface ProductsContextProps {
   products: ProductsState;
-  setProduct: (key: keyof ProductsState, value: ProductType) => void;
+  setProduct: (key: keyof ProductsState, value: Partial<ProductType>) => void; // Partial allows partial updates
   resetProducts: () => void;
 }
 
@@ -55,20 +55,18 @@ export const ProductsProvider: React.FC<{ children: ReactNode }> = ({
     initialProductsValues,
   );
 
-  const setProduct = (key: keyof ProductsState, value: ProductType) => {
+  const setProduct = (key: keyof ProductsState, value: Partial<ProductType>) => {
     setProducts((prev) => ({
       ...prev,
-      [key]: value,
+      [key]: {
+        ...prev[key], // Merge with existing product
+        ...value, // Allow partial updates
+      },
     }));
   };
 
   const resetProducts = () => {
-    setProducts((prev) => ({
-      ...prev,
-      product1: { ...prev.product1, nameOpened: false, priceOpened: false },
-      product2: { ...prev.product2, nameOpened: false, priceOpened: false },
-      product3: { ...prev.product3, nameOpened: false, priceOpened: false },
-    }));
+    setProducts(initialProductsValues); // Reset to initial values
   };
 
   return (

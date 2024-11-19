@@ -138,179 +138,8 @@ const SettingsModal: FC<ModalProps> = ({ isOpen, onClose }) => {
             <li>Click the price to reveal the price</li>
           </ul>
 
-          <div className='flex justify-between items-start gap-[25px]'>
-            <div className='w-full'>
-              <div className='flex items-center justify-between'>
-                <p className='font-bold text-base font-inter'>Product 1:</p>
-                <input
-                  type='text'
-                  value={product1.productName}
-                  onChange={(e) =>
-                    setProduct1((prev) => ({
-                      ...prev,
-                      productName: e.target.value,
-                    }))
-                  }
-                  placeholder='Product Name'
-                  className='font-inter max-w-[142px] w-full h-[28px] rounded-[2px] p-2 border border-[#c0bfc1] border-solid mb-[5px]'
-                />
-              </div>
-              <div className='flex items-center justify-between'>
-                <p className='font-bold text-base font-inter'>Price:</p>
-                <input
-                  type='text'
-                  value={product1.productPrice}
-                  onChange={(e) =>
-                    +e.target.value < 999999 &&
-                    setProduct1((prev) => ({
-                      ...prev,
-                      productPrice: e.target.value,
-                    }))
-                  }
-                  placeholder='Product Price'
-                  className='font-inter max-w-[142px] w-full h-[28px] rounded-[2px] p-2 border border-[#c0bfc1] border-solid mb-[5px]'
-                />
-              </div>
-              <div className='relative w-[223px] h-[101px] bg-white flex flex-col items-center justify-center text-center text-[#B6BBC1] border border-[#c0bfc1] rounded-[2px]'>
-                {imagePreview1 ? (
-                  <img
-                    src={imagePreview1 as string}
-                    alt='Product 1'
-                    className='w-full h-full object-contain'
-                  />
-                ) : (
-                  <>
-                    <img src={AcceptImages} alt='Accept images' />
-                    <span className='text-xs font-inter font-normal text-[#B6BBC1]'>
-                      Upload image
-                    </span>
-                  </>
-                )}
-                <input
-                  type='file'
-                  accept='image/png, image/jpeg'
-                  onChange={(e) =>
-                    handleFileChange(e, setProduct1, setImagePreview1)
-                  }
-                  className='absolute inset-0 opacity-0 cursor-pointer'
-                />
-              </div>
-            </div>
-            <div className='w-full'>
-              <div className='flex items-center justify-between'>
-                <p className='font-bold text-base font-inter'>Product 2:</p>
-                <input
-                  type='text'
-                  value={product2.productName}
-                  onChange={(e) =>
-                    setProduct2((prev) => ({
-                      ...prev,
-                      productName: e.target.value,
-                    }))
-                  }
-                  placeholder='Product Name'
-                  className='font-inter max-w-[142px] w-full h-[28px] rounded-[2px] p-2 border border-[#c0bfc1] border-solid mb-[5px]'
-                />
-              </div>
-              <div className='flex items-center justify-between'>
-                <p className='font-bold text-base font-inter'>Price:</p>
-                <input
-                  type='text'
-                  value={product2.productPrice}
-                  onChange={(e) =>
-                    +e.target.value < 999999 &&
-                    setProduct2((prev) => ({
-                      ...prev,
-                      productPrice: e.target.value,
-                    }))
-                  }
-                  placeholder='Product Price'
-                  className='font-inter max-w-[142px] w-full h-[28px] rounded-[2px] p-2 border border-[#c0bfc1] border-solid mb-[5px]'
-                />
-              </div>
-              <div className='relative w-[223px] h-[101px] bg-white flex flex-col items-center justify-center text-center text-[#B6BBC1] border border-[#c0bfc1] rounded-[2px]'>
-                {imagePreview2 ? (
-                  <img
-                    src={imagePreview2 as string}
-                    alt='Product 2'
-                    className='w-full h-full object-contain'
-                  />
-                ) : (
-                  <>
-                    <img src={AcceptImages} alt='Accept images' />
-                    <span className='text-xs font-inter font-normal text-[#B6BBC1]'>
-                      Upload image
-                    </span>
-                  </>
-                )}
-                <input
-                  type='file'
-                  accept='image/png, image/jpeg'
-                  onChange={(e) =>
-                    handleFileChange(e, setProduct2, setImagePreview2)
-                  }
-                  className='absolute inset-0 opacity-0 cursor-pointer'
-                />
-              </div>
-            </div>
-            <div className='w-full'>
-              <div className='flex items-center justify-between'>
-                <p className='font-bold text-base font-inter'>Product 3:</p>
-                <input
-                  type='text'
-                  value={product3.productName}
-                  onChange={(e) =>
-                    setProduct3((prev) => ({
-                      ...prev,
-                      productName: e.target.value,
-                    }))
-                  }
-                  placeholder='Product Name'
-                  className='font-inter max-w-[142px] w-full h-[28px] rounded-[2px] p-2 border border-[#c0bfc1] border-solid mb-[5px]'
-                />
-              </div>
-              <div className='flex items-center justify-between'>
-                <p className='font-bold text-base font-inter'>Price:</p>
-                <input
-                  type='text'
-                  value={product3.productPrice}
-                  onChange={(e) =>
-                    +e.target.value < 999999 &&
-                    setProduct3((prev) => ({
-                      ...prev,
-                      productPrice: e.target.value,
-                    }))
-                  }
-                  placeholder='Product Price'
-                  className='font-inter max-w-[142px] w-full h-[28px] rounded-[2px] p-2 border border-[#c0bfc1] border-solid mb-[5px]'
-                />
-              </div>
-              <div className='relative w-[223px] h-[101px] bg-white flex flex-col items-center justify-center text-center text-[#B6BBC1] border border-[#c0bfc1] rounded-[2px]'>
-                {imagePreview3 ? (
-                  <img
-                    src={imagePreview3 as string}
-                    alt='Product 3'
-                    className='w-full h-full object-contain'
-                  />
-                ) : (
-                  <>
-                    <img src={AcceptImages} alt='Accept images' />
-                    <span className='text-xs font-inter font-normal text-[#B6BBC1]'>
-                      Upload image
-                    </span>
-                  </>
-                )}
-                <input
-                  type='file'
-                  accept='image/png, image/jpeg'
-                  onChange={(e) =>
-                    handleFileChange(e, setProduct3, setImagePreview3)
-                  }
-                  className='absolute inset-0 opacity-0 cursor-pointer'
-                />
-              </div>
-            </div>
-          </div>
+ 
+
           <div className='w-full mt-3 flex'>
             <button
               style={{
@@ -330,8 +159,10 @@ const SettingsModal: FC<ModalProps> = ({ isOpen, onClose }) => {
         isOpen={openConfirmationModal}
         onClose={() => setOpenConfirmationModal(false)}
         onReset={() => {
-          resetProducts();
-          resetGame();
+          localStorage.clear()
+          location.reload()
+       //   resetProducts();
+        //  resetGame();
         }}
       />
     </div>
