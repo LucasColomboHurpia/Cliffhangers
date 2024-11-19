@@ -124,49 +124,33 @@ const GameScreen = () => {
   };
 
   useEffect(() => {
-    const { x: xCoefficient, y: yCoefficient } = getStepXCoefficient(
-      window.innerWidth,
-    );
+    const { x: xCoefficient, y: yCoefficient } = getStepXCoefficient(window.innerWidth);
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === ' ') {
         handlePlayWinningAudioRef();
       }
 
-      if (
-        event.key === 'ArrowLeft' &&
-        positionX < rightLimit &&
-        positionX > leftLimit
-      ) {
+      // Move left
+      if (event.key === 'ArrowLeft' && positionX > leftLimit) {
         setIsYodeling(true);
         setIsGmeStarted(true);
-        setPositionX((prevPositionX) =>
-          Math.max(prevPositionX - xCoefficient, -window.innerWidth),
-        );
-        setPositionY((prevPositionY) =>
-          Math.max(prevPositionY - yCoefficient, 0),
-        );
+        setPositionX((prevPositionX) => Math.max(prevPositionX - xCoefficient, leftLimit));
+        setPositionY((prevPositionY) => prevPositionY - yCoefficient);
       }
 
-      if (event.key === 'ArrowLeft' && positionX === leftLimit) {
+      // Stop yodeling when reaching the left limit
+      if (event.key === 'ArrowLeft' && positionX <= leftLimit) {
         yodelAudioRef.current.pause();
       }
 
-      if (event.key === 'ArrowRight') {
-        positionX < rightLimit && setIsYodeling(true);
+      // Move right
+      if (event.key === 'ArrowRight' && positionX < rightLimit) {
+        setIsYodeling(true);
         setIsGmeStarted(true);
-
-        setPositionX((prevPositionX) => {
-          const newPositionX = Math.min(
-            prevPositionX + xCoefficient,
-            rightLimit,
-          );
-          return newPositionX;
-        });
+        setPositionX((prevPositionX) => Math.min(prevPositionX + xCoefficient, rightLimit));
         setPositionY((prevPositionY) =>
-          positionX < rightLimit
-            ? Math.min(prevPositionY + yCoefficient, window.innerHeight)
-            : startPositionY,
+          Math.min(prevPositionY + yCoefficient, window.innerHeight - startPositionY)
         );
       }
     };
@@ -175,7 +159,7 @@ const GameScreen = () => {
       if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
         setIsYodeling(false);
         yodelAudioRef.current.pause();
-        positionX < rightLimit && handlePlayClimberStopsAudioRef();
+        if (positionX < rightLimit) handlePlayClimberStopsAudioRef();
       }
     };
 
@@ -186,7 +170,8 @@ const GameScreen = () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [positionX, positionY, isRendered]);
+  }, [positionX, positionY, leftLimit, rightLimit]);
+
 
   useEffect(() => {
     if (positionX === rightLimit) {
@@ -235,14 +220,15 @@ const GameScreen = () => {
   }, [isYodeling]);
 
   useEffect(() => {
-    const observer = new MutationObserver(() => {
+    setTimeout(() => {
       if (yodelyGuyElement && gameBackgroundElement) {
         const yodelyGuyRect = yodelyGuyElement.getBoundingClientRect();
-        const gameBackgroundRect = gameBackgroundElement.getBoundingClientRect();
-  
+        const gameBackgroundRect =
+          gameBackgroundElement.getBoundingClientRect();
+
         const relativeX = yodelyGuyRect.left - gameBackgroundRect.left;
         const relativeY = gameBackgroundRect.bottom - yodelyGuyRect.bottom;
-  
+
         if (
           (!savedPositionX || savedPositionX <= startPositionX) &&
           (!savedPositionY || savedPositionY <= startPositionY) &&
@@ -258,14 +244,9 @@ const GameScreen = () => {
           setPositionY(savedPositionY);
         }
       }
-    });
-  
-    if (gameBackgroundElement) {
-      observer.observe(gameBackgroundElement, { childList: true, subtree: true });
-    }
-  
-    return () => observer.disconnect();
+    }, 50);
   }, [
+    isStartPositionSet,
     yodelyGuyElement,
     gameBackgroundElement,
     isRendered,
@@ -276,7 +257,8 @@ const GameScreen = () => {
     startPositionX,
     startPositionY,
   ]);
-  
+
+
 
   useEffect(() => {
     if (rulerElement && gameBackgroundElement && yodelyGuyElement) {
@@ -519,17 +501,21 @@ const GameScreen = () => {
     }
     : {};
 
+    const [isHidden, setIsHidden] = useState<boolean>(false);
+    const hideYodelyGuy = () => {
+      setIsHidden(true);
+    };
     useEffect(() => {
-      const yodelyGuy = document.getElementById('yodely-guy');
-      if (yodelyGuy) {
-        console.log('Listener attached');
-        yodelyGuy.addEventListener('animationend', () => {
-          console.log('Animation ended');
-          yodelyGuy.style.opacity = '0';
-        });
+      if (remainingMoves === 0) {
+        const timeout = setTimeout(() => {
+          hideYodelyGuy();
+        }, 1500);
+        return () => clearTimeout(timeout); // Cleanup on unmount
       }
-    }, []);
+    }, [remainingMoves]);
     
+
+
 
 
   return (
@@ -631,17 +617,19 @@ const GameScreen = () => {
           alt='Ruler'
 
           className={`h-full absolute ${outerRocksSize && outerRocksSize.width >= 2560
-              ? ' w-[65%] bottom-[14.1%] left-[17.5%]'
-              : outerRocksSize && outerRocksSize.width >= 1920
-                ? ' w-[65%] bottom-[14%] left-[17.4%]'
-                : ' w-[65%] bottom-[13.7%] left-[17.3%]'
+            ? ' w-[65%] bottom-[14.1%] left-[17.5%]'
+            : outerRocksSize && outerRocksSize.width >= 1920
+              ? ' w-[65%] bottom-[14%] left-[17.4%]'
+              : ' w-[65%] bottom-[13.7%] left-[17.3%]'
             } m-auto z-30 object-contain`}
         />
         <img
           src={YodelyGuy}
           alt='YodelyGuy'
           id='yodely-guy'
-          className={`absolute yodely-guy z-[100] ${falling ? 'fall rotate' : ''
+          className={`absolute yodely-guy z-[100] 
+            ${isHidden ? 'opacity-0' : 'opacity-100'}
+            ${falling ? 'fall rotate' : ''
             }
           ${outerRocksSize && outerRocksSize.width >= 2560
               ? 'w-[4.8%] left-[17.4%] bottom-[44.8%]'

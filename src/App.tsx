@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useRef } from 'react';
 
 import GameScreen from './components/GameScreen/GameScreen';
 import ProdutScreen from './components/ProductScreen/ProdutScreen';
@@ -6,17 +7,6 @@ import ProdutScreen from './components/ProductScreen/ProdutScreen';
 
 
 //////////////////
-
-const originalConsoleError = console.error;
-
-console.error = (message, ...args) => {
-  if (
-    typeof message === 'string' 
-  ) {
-    return; // Suppress the error
-  }
-  originalConsoleError(message, ...args); // Pass other errors through
-};
 
 
 /////////////////
