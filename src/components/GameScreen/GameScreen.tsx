@@ -235,15 +235,14 @@ const GameScreen = () => {
   }, [isYodeling]);
 
   useEffect(() => {
-    setTimeout(() => {
+    const observer = new MutationObserver(() => {
       if (yodelyGuyElement && gameBackgroundElement) {
         const yodelyGuyRect = yodelyGuyElement.getBoundingClientRect();
-        const gameBackgroundRect =
-          gameBackgroundElement.getBoundingClientRect();
-
+        const gameBackgroundRect = gameBackgroundElement.getBoundingClientRect();
+  
         const relativeX = yodelyGuyRect.left - gameBackgroundRect.left;
         const relativeY = gameBackgroundRect.bottom - yodelyGuyRect.bottom;
-
+  
         if (
           (!savedPositionX || savedPositionX <= startPositionX) &&
           (!savedPositionY || savedPositionY <= startPositionY) &&
@@ -259,9 +258,14 @@ const GameScreen = () => {
           setPositionY(savedPositionY);
         }
       }
-    }, 50);
+    });
+  
+    if (gameBackgroundElement) {
+      observer.observe(gameBackgroundElement, { childList: true, subtree: true });
+    }
+  
+    return () => observer.disconnect();
   }, [
-    isStartPositionSet,
     yodelyGuyElement,
     gameBackgroundElement,
     isRendered,
@@ -272,6 +276,7 @@ const GameScreen = () => {
     startPositionX,
     startPositionY,
   ]);
+  
 
   useEffect(() => {
     if (rulerElement && gameBackgroundElement && yodelyGuyElement) {
