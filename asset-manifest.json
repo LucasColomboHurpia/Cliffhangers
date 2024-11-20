@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Cliffhangers/static/css/main.54a31e75.css",
-    "main.js": "/Cliffhangers/static/js/main.0a9e60c6.js",
+    "main.js": "/Cliffhangers/static/js/main.b8436dae.js",
     "static/js/453.2832e561.chunk.js": "/Cliffhangers/static/js/453.2832e561.chunk.js",
     "static/media/ThePriceIsRightYodelling.mp3": "/Cliffhangers/static/media/ThePriceIsRightYodelling.c0a97a49921f819613ce.mp3",
     "static/media/ProductItem.svg": "/Cliffhangers/static/media/ProductItem.8f63c486c7bae91531226b3d8fd16d85.svg",
@@ -25,11 +25,11 @@
     "index.html": "/Cliffhangers/index.html",
     "static/media/CrossIcon.svg": "/Cliffhangers/static/media/CrossIcon.db58f52a0b5d3530cd02db40ab7aeda1.svg",
     "main.54a31e75.css.map": "/Cliffhangers/static/css/main.54a31e75.css.map",
-    "main.0a9e60c6.js.map": "/Cliffhangers/static/js/main.0a9e60c6.js.map",
+    "main.b8436dae.js.map": "/Cliffhangers/static/js/main.b8436dae.js.map",
     "453.2832e561.chunk.js.map": "/Cliffhangers/static/js/453.2832e561.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.54a31e75.css",
-    "static/js/main.0a9e60c6.js"
+    "static/js/main.b8436dae.js"
   ]
 }
