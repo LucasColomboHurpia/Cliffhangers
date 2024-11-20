@@ -122,57 +122,68 @@ const GameScreen = () => {
     }
     return closestKey;
   };
+/////////////////////////////////////////////////
+useEffect(() => {
+  // Configurable angle for diagonal movement
+  const angle = 15; // Adjust this value to change the diagonal slope
+  const radians = (angle * Math.PI) / 180; // Convert angle to radians
+  const stepSize = 10; // Base step size for movement
+  const xStep = stepSize * Math.cos(radians); // Horizontal movement
+  const yStep = stepSize * Math.sin(radians); // Vertical movement
 
-  useEffect(() => {
-    const { x: xCoefficient, y: yCoefficient } = getStepXCoefficient(window.innerWidth);
+  const moveYodelyGuy = (direction: 'left' | 'right') => {
+    if (direction === 'left' && positionX > leftLimit) {
+      setIsYodeling(true);
+      setIsGmeStarted(true);
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === ' ') {
+      setPositionX((prevPositionX) => Math.max(prevPositionX - xStep, leftLimit));
+      setPositionY((prevPositionY) => Math.max(prevPositionY - yStep, 0)); // Adjust Y upwards
+    }
+
+    if (direction === 'right' && positionX < rightLimit) {
+      setIsYodeling(true);
+      setIsGmeStarted(true);
+
+      setPositionX((prevPositionX) => Math.min(prevPositionX + xStep, rightLimit));
+      setPositionY((prevPositionY) => Math.max(prevPositionY + yStep, 0)); // Adjust Y upwards for diagonal
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    switch (event.key) {
+      case ' ':
         handlePlayWinningAudioRef();
-      }
+        break;
+      case 'ArrowLeft':
+        moveYodelyGuy('left');
+        break;
+      case 'ArrowRight':
+        moveYodelyGuy('right');
+        break;
+      default:
+        break;
+    }
+  };
 
-      // Move left
-      if (event.key === 'ArrowLeft' && positionX > leftLimit) {
-        setIsYodeling(true);
-        setIsGmeStarted(true);
-        setPositionX((prevPositionX) => Math.max(prevPositionX - xCoefficient, leftLimit));
-        setPositionY((prevPositionY) => prevPositionY - yCoefficient);
-      }
+  const handleKeyUp = (event: KeyboardEvent) => {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      setIsYodeling(false);
+      yodelAudioRef.current.pause();
+      if (positionX < rightLimit) handlePlayClimberStopsAudioRef();
+    }
+  };
 
-      // Stop yodeling when reaching the left limit
-      if (event.key === 'ArrowLeft' && positionX <= leftLimit) {
-        yodelAudioRef.current.pause();
-      }
+  window.addEventListener('keydown', handleKeyDown);
+  window.addEventListener('keyup', handleKeyUp);
 
-      // Move right
-      if (event.key === 'ArrowRight' && positionX < rightLimit) {
-        setIsYodeling(true);
-        setIsGmeStarted(true);
-        setPositionX((prevPositionX) => Math.min(prevPositionX + xCoefficient, rightLimit));
-        setPositionY((prevPositionY) =>
-          Math.min(prevPositionY + yCoefficient, window.innerHeight - startPositionY)
-        );
-      }
-    };
+  return () => {
+    window.removeEventListener('keydown', handleKeyDown);
+    window.removeEventListener('keyup', handleKeyUp);
+  };
+}, [positionX, positionY, leftLimit, rightLimit, startPositionY]);
 
-    const handleKeyUp = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-        setIsYodeling(false);
-        yodelAudioRef.current.pause();
-        if (positionX < rightLimit) handlePlayClimberStopsAudioRef();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, [positionX, positionY, leftLimit, rightLimit]);
-
-
+  
+///////////////////////////
   useEffect(() => {
     if (positionX === rightLimit) {
       positionY !== startPositionY && setFalling(true);
