@@ -122,68 +122,68 @@ const GameScreen = () => {
     }
     return closestKey;
   };
-/////////////////////////////////////////////////
-useEffect(() => {
-  // Configurable angle for diagonal movement
-  const angle = 15; // Adjust this value to change the diagonal slope
-  const radians = (angle * Math.PI) / 180; // Convert angle to radians
-  const stepSize = 10; // Base step size for movement
-  const xStep = stepSize * Math.cos(radians); // Horizontal movement
-  const yStep = stepSize * Math.sin(radians); // Vertical movement
+  /////////////////////////////////////////////////
+  useEffect(() => {
+    // Configurable angle for diagonal movement
+    const angle = 15; // Adjust this value to change the diagonal slope
+    const radians = (angle * Math.PI) / 180; // Convert angle to radians
+    const stepSize = 10; // Base step size for movement
+    const xStep = stepSize * Math.cos(radians); // Horizontal movement
+    const yStep = stepSize * Math.sin(radians); // Vertical movement
 
-  const moveYodelyGuy = (direction: 'left' | 'right') => {
-    if (direction === 'left' && positionX > leftLimit) {
-      setIsYodeling(true);
-      setIsGmeStarted(true);
+    const moveYodelyGuy = (direction: 'left' | 'right') => {
+      if (direction === 'left' && positionX > leftLimit) {
+        setIsYodeling(true);
+        setIsGmeStarted(true);
 
-      setPositionX((prevPositionX) => Math.max(prevPositionX - xStep, leftLimit));
-      setPositionY((prevPositionY) => Math.max(prevPositionY - yStep, 0)); // Adjust Y upwards
-    }
+        setPositionX((prevPositionX) => Math.max(prevPositionX - xStep, leftLimit));
+        setPositionY((prevPositionY) => Math.max(prevPositionY - yStep, 0)); // Adjust Y upwards
+      }
 
-    if (direction === 'right' && positionX < rightLimit) {
-      setIsYodeling(true);
-      setIsGmeStarted(true);
+      if (direction === 'right' && positionX < rightLimit) {
+        setIsYodeling(true);
+        setIsGmeStarted(true);
 
-      setPositionX((prevPositionX) => Math.min(prevPositionX + xStep, rightLimit));
-      setPositionY((prevPositionY) => Math.max(prevPositionY + yStep, 0)); // Adjust Y upwards for diagonal
-    }
-  };
+        setPositionX((prevPositionX) => Math.min(prevPositionX + xStep, rightLimit));
+        setPositionY((prevPositionY) => Math.max(prevPositionY + yStep, 0)); // Adjust Y upwards for diagonal
+      }
+    };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    switch (event.key) {
-      case ' ':
-        handlePlayWinningAudioRef();
-        break;
-      case 'ArrowLeft':
-        moveYodelyGuy('left');
-        break;
-      case 'ArrowRight':
-        moveYodelyGuy('right');
-        break;
-      default:
-        break;
-    }
-  };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case ' ':
+          handlePlayWinningAudioRef();
+          break;
+        case 'ArrowLeft':
+          moveYodelyGuy('left');
+          break;
+        case 'ArrowRight':
+          moveYodelyGuy('right');
+          break;
+        default:
+          break;
+      }
+    };
 
-  const handleKeyUp = (event: KeyboardEvent) => {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-      setIsYodeling(false);
-      yodelAudioRef.current.pause();
-      if (positionX < rightLimit) handlePlayClimberStopsAudioRef();
-    }
-  };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        setIsYodeling(false);
+        yodelAudioRef.current.pause();
+        if (positionX < rightLimit) handlePlayClimberStopsAudioRef();
+      }
+    };
 
-  window.addEventListener('keydown', handleKeyDown);
-  window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
 
-  return () => {
-    window.removeEventListener('keydown', handleKeyDown);
-    window.removeEventListener('keyup', handleKeyUp);
-  };
-}, [positionX, positionY, leftLimit, rightLimit, startPositionY]);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [positionX, positionY, leftLimit, rightLimit, startPositionY]);
 
-  
-///////////////////////////
+
+  ///////////////////////////
   useEffect(() => {
     if (positionX === rightLimit) {
       positionY !== startPositionY && setFalling(true);
@@ -231,53 +231,53 @@ useEffect(() => {
   }, [isYodeling]);
 
   useEffect(() => {
-    const setInitialPosition = () => {
-      if (yodelyGuyElement && gameBackgroundElement) {
-        const yodelyGuyRect = yodelyGuyElement.getBoundingClientRect();
-        const gameBackgroundRect = gameBackgroundElement.getBoundingClientRect();
+    const initializePosition = () => {
+      const yodelyGuyElement = document.getElementById('yodely-guy');
 
-        console.log('Elements available for positioning:', {
-          yodelyGuyElement,
-          gameBackgroundElement,
-        });
-  
-        const relativeX = yodelyGuyRect.left - gameBackgroundRect.left;
-        const relativeY = gameBackgroundRect.bottom - yodelyGuyRect.bottom;
-  
-        if (!isStartPositionSet) {
-          // Only set the initial position if it hasn't been set yet
-          setPositionX(relativeX);
-          setPositionY(relativeY);
-          setStartPositionX(relativeX);
-          setStartPositionY(relativeY);
-          setStartPositionSet(true);
-        } else if (savedPositionX && savedPositionY) {
-          // Restore saved position if available
-          setPositionX(savedPositionX);
-          setPositionY(savedPositionY);
-        }
+      if (yodelyGuyElement) {
+        const updatePosition = () => {
+          // Get computed styles for the element
+          const computedStyle = window.getComputedStyle(yodelyGuyElement);
+          const cssLeft = parseFloat(computedStyle.left);
+          const cssBottom = parseFloat(computedStyle.bottom);
+
+          // Set these positions directly to your state
+          setPositionX(cssLeft);
+          setPositionY(cssBottom);
+
+          console.log('Accurate Initial Position Set:', {
+            cssLeft,
+            cssBottom,
+          });
+        };
+
+        // Use requestAnimationFrame to ensure layout calculations are complete
+        requestAnimationFrame(updatePosition);
       }
     };
-  
-    // Add a delay to ensure DOM elements are fully rendered
-    const timeout = setTimeout(() => {
-      setInitialPosition();
-    }, 100);
-  
-    return () => clearTimeout(timeout); // Cleanup the timeout
-  }, [
-    isStartPositionSet,
-    yodelyGuyElement,
-    gameBackgroundElement,
-    isRendered,
-    isMainBgLoaded,
-    isGameContainerLoaded,
-    savedPositionX,
-    savedPositionY,
-    startPositionX,
-    startPositionY,
-  ]);
-  
+
+    const gameBackground = document.getElementById('game-background');
+    const yodelyGuyElement = document.getElementById('yodely-guy');
+
+    if (gameBackground && yodelyGuyElement) {
+      // Wait for the images to fully load before calculating position
+      const handleLoad = () => {
+        initializePosition();
+      };
+
+      gameBackground.addEventListener('load', handleLoad);
+      yodelyGuyElement.addEventListener('load', handleLoad);
+
+      return () => {
+        gameBackground.removeEventListener('load', handleLoad);
+        yodelyGuyElement.removeEventListener('load', handleLoad);
+      };
+    } else {
+      // Fallback in case images are already loaded
+      initializePosition();
+    }
+  }, []);
+
 
 
 
@@ -522,19 +522,19 @@ useEffect(() => {
     }
     : {};
 
-    const [isHidden, setIsHidden] = useState<boolean>(false);
-    const hideYodelyGuy = () => {
-      setIsHidden(true);
-    };
-    useEffect(() => {
-      if (remainingMoves === 0) {
-        const timeout = setTimeout(() => {
-          hideYodelyGuy();
-        }, 1500);
-        return () => clearTimeout(timeout); // Cleanup on unmount
-      }
-    }, [remainingMoves]);
-    
+  const [isHidden, setIsHidden] = useState<boolean>(false);
+  const hideYodelyGuy = () => {
+    setIsHidden(true);
+  };
+  useEffect(() => {
+    if (remainingMoves === 0) {
+      const timeout = setTimeout(() => {
+        hideYodelyGuy();
+      }, 1500);
+      return () => clearTimeout(timeout); // Cleanup on unmount
+    }
+  }, [remainingMoves]);
+
 
 
 
