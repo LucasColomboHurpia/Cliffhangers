@@ -220,31 +220,40 @@ const GameScreen = () => {
   }, [isYodeling]);
 
   useEffect(() => {
-    setTimeout(() => {
+    const setInitialPosition = () => {
       if (yodelyGuyElement && gameBackgroundElement) {
         const yodelyGuyRect = yodelyGuyElement.getBoundingClientRect();
-        const gameBackgroundRect =
-          gameBackgroundElement.getBoundingClientRect();
+        const gameBackgroundRect = gameBackgroundElement.getBoundingClientRect();
 
+        console.log('Elements available for positioning:', {
+          yodelyGuyElement,
+          gameBackgroundElement,
+        });
+  
         const relativeX = yodelyGuyRect.left - gameBackgroundRect.left;
         const relativeY = gameBackgroundRect.bottom - yodelyGuyRect.bottom;
-
-        if (
-          (!savedPositionX || savedPositionX <= startPositionX) &&
-          (!savedPositionY || savedPositionY <= startPositionY) &&
-          !isStartPositionSet
-        ) {
+  
+        if (!isStartPositionSet) {
+          // Only set the initial position if it hasn't been set yet
           setPositionX(relativeX);
           setPositionY(relativeY);
           setStartPositionX(relativeX);
           setStartPositionY(relativeY);
           setStartPositionSet(true);
         } else if (savedPositionX && savedPositionY) {
+          // Restore saved position if available
           setPositionX(savedPositionX);
           setPositionY(savedPositionY);
         }
       }
-    }, 50);
+    };
+  
+    // Add a delay to ensure DOM elements are fully rendered
+    const timeout = setTimeout(() => {
+      setInitialPosition();
+    }, 100);
+  
+    return () => clearTimeout(timeout); // Cleanup the timeout
   }, [
     isStartPositionSet,
     yodelyGuyElement,
@@ -257,6 +266,7 @@ const GameScreen = () => {
     startPositionX,
     startPositionY,
   ]);
+  
 
 
 
