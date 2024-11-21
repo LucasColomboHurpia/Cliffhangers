@@ -7,3 +7,29 @@
     opacity: 0;
   }
 }
+
+.testCont{
+  position: absolute;
+  bottom: 20vw;
+  left: 20%;
+  transition: "left 0.1s ease"
+}
+
+.animate {
+  animation: fall-spin-fade 1s ease-in-out forwards; /* Trigger the animation */
+}
+
+@keyframes fall-spin-fade {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(50px) rotate(180deg);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(200px) rotate(360deg);
+    opacity: 0;
+  }
+}

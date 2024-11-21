@@ -73,24 +73,31 @@ const GameScreen = () => {
   const [rulerElement, setRulerElement] = useState<any>(null);
   const [gameMarginBottom, setGameMarginBottom] = useState<number | null>(null);
 
+  const [gameOver, setGameOver] = useState<boolean>(false)
+
   const navigate = useNavigate();
 
   const handlePlayYodelAudioRef = () => {
-    climberStopsMovingAudioRef.current.pause();
-    winningAudioRef.current.pause();
-    fallAudioRef.current.pause();
-    yodelAudioRef.current.pause();
-    yodelAudioRef.current.currentTime = 0;
-    yodelAudioRef.current.play();
+    if (remainingMoves > 0) {
+      climberStopsMovingAudioRef.current.pause();
+      winningAudioRef.current.pause();
+      fallAudioRef.current.pause();
+      yodelAudioRef.current.pause();
+      yodelAudioRef.current.currentTime = 0;
+      yodelAudioRef.current.play();
+    }
   };
 
   const handlePlayClimberStopsAudioRef = () => {
-    yodelAudioRef.current.pause();
-    winningAudioRef.current.pause();
-    fallAudioRef.current.pause();
-    climberStopsMovingAudioRef.current.pause();
-    climberStopsMovingAudioRef.current.currentTime = 0;
-    climberStopsMovingAudioRef.current.play();
+    if (remainingMoves > 0 && !gameOver) {
+      yodelAudioRef.current.pause();
+      winningAudioRef.current.pause();
+    //  fallAudioRef.current.pause();
+      climberStopsMovingAudioRef.current.pause();
+      climberStopsMovingAudioRef.current.currentTime = 0;
+      climberStopsMovingAudioRef.current.play();
+    }
+
   };
 
   const handlePlayWinningAudioRef = () => {
@@ -136,16 +143,16 @@ const GameScreen = () => {
         setIsYodeling(true);
         setIsGmeStarted(true);
 
-        setPositionX((prevPositionX) => Math.max(prevPositionX - xStep, leftLimit));
-        setPositionY((prevPositionY) => Math.max(prevPositionY - yStep, 0)); // Adjust Y upwards
+        //   setPositionX((prevPositionX) => Math.max(prevPositionX - xStep, leftLimit));
+        //    setPositionY((prevPositionY) => Math.max(prevPositionY - yStep, 0)); // Adjust Y upwards
       }
 
       if (direction === 'right' && positionX < rightLimit) {
         setIsYodeling(true);
         setIsGmeStarted(true);
 
-        setPositionX((prevPositionX) => Math.min(prevPositionX + xStep, rightLimit));
-        setPositionY((prevPositionY) => Math.max(prevPositionY + yStep, 0)); // Adjust Y upwards for diagonal
+        //  setPositionX((prevPositionX) => Math.min(prevPositionX + xStep, rightLimit));
+        //   setPositionY((prevPositionY) => Math.max(prevPositionY + yStep, 0)); // Adjust Y upwards for diagonal
       }
     };
 
@@ -169,7 +176,7 @@ const GameScreen = () => {
       if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
         setIsYodeling(false);
         yodelAudioRef.current.pause();
-        if (positionX < rightLimit) handlePlayClimberStopsAudioRef();
+        if (remainingMoves != 0 && !gameOver) handlePlayClimberStopsAudioRef();
       }
     };
 
@@ -196,7 +203,7 @@ const GameScreen = () => {
     const centerPosition = yodelyGuyElement ? yodelyGuyElement.width / 2 : 0;
     const closestKey = getClosestPointKey(positionX + centerPosition);
     if (closestKey !== null) {
-      setRemainingMoves(MAX_MOVES - +closestKey);
+      //   setRemainingMoves(MAX_MOVES - +closestKey);
     }
   }, [positionX, yodelyGuyElement]);
 
@@ -206,6 +213,7 @@ const GameScreen = () => {
         setFalling(false);
       }, 1500);
       const play = setTimeout(() => {
+        setGameOver(true)
         handlePlayFallAudioRef();
       }, 0);
 
@@ -527,7 +535,9 @@ const GameScreen = () => {
     setIsHidden(true);
   };
   useEffect(() => {
+
     if (remainingMoves === 0) {
+      handlePlayFallAudioRef();
       const timeout = setTimeout(() => {
         hideYodelyGuy();
       }, 1500);
@@ -535,9 +545,95 @@ const GameScreen = () => {
     }
   }, [remainingMoves]);
 
+  //////////// the untangling of the spaghetti //////////
+  const [left, setLeft] = useState(17);
+  const [bottom, setBottom] = useState<number>(19);
 
+  const [animate, setAnimate] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(true);
+  const currentBreakpointIndex = useRef<number>(0);
 
+  const handleKeyPress = (event: KeyboardEvent) => {
+    const parent = document.querySelector('.parent'); // Select the parent container
+    const parentWidth = parent?.getBoundingClientRect().width || 0; // Get the parent's width
 
+    // Calculate step size as percentage
+    const stepSize = (((parentWidth * 0.65) / 25) / parentWidth) * 5;
+
+    // Define breakpoints (percentages of the parent container width)
+    const breakpoints = [19, 22, 24.28, 26.87, 29.34, 31.81, 34.28, 36.75, 39.1, 41.7, 44.17, 46.51, 49.11, 51.58, 54.04, 56.39, 58.86, 61.46, 63.8, 66.27, 68.74, 71.34, 73.68, 76.28, 78.49];
+
+    console.log('Ruler size (65% of parent):', parentWidth * 0.65);
+    console.log('Step size (%):', stepSize);
+
+    if (event.key === "ArrowRight" && remainingMoves > 0) {
+      setLeft((prevLeft) => {
+        const newLeft = prevLeft + stepSize;
+
+        console.log(`Total percentage moved: ${newLeft}%`);
+
+        if (
+          currentBreakpointIndex.current < breakpoints.length &&
+          newLeft > breakpoints[currentBreakpointIndex.current]
+        ) {
+          console.log(
+            `Breakpoint reached: ${breakpoints[currentBreakpointIndex.current]}%`
+          );
+          currentBreakpointIndex.current++;
+          setRemainingMoves((prevMoves) => prevMoves - 1);
+        }
+
+        return newLeft;
+      });
+
+      setBottom((prevBottom) => prevBottom + stepSize * 0.26); // Move diagonally
+    }
+
+    if (event.key === "ArrowLeft" && currentBreakpointIndex.current > 0) {
+      setLeft((prevLeft) => {
+        const newLeft = prevLeft - stepSize;
+
+        console.log(`Total percentage moved: ${newLeft}%`);
+
+        if (
+          currentBreakpointIndex.current > 0 &&
+          newLeft < breakpoints[currentBreakpointIndex.current - 1]
+        ) {
+          currentBreakpointIndex.current--;
+          console.log(
+            `Moved back past breakpoint: ${breakpoints[currentBreakpointIndex.current]}%`
+          );
+          setRemainingMoves((prevMoves) => prevMoves + 1);
+        }
+
+        return newLeft;
+      });
+
+      setBottom((prevBottom) => prevBottom - stepSize * 0.26); // Move diagonally
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener for keydown
+    window.addEventListener("keydown", handleKeyPress);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
+  useEffect(() => {
+    // Trigger animation when remainingMoves hits 0
+    if (remainingMoves === 0) {
+      setAnimate(true);
+
+      const timer = setTimeout(() => {
+        setAnimate(false);
+        setVisible(false); // Remove the element from DOM
+      }, 1000); // Match animation duration
+      return () => clearTimeout(timer); // Cleanup timer
+    }
+  }, [remainingMoves]);
 
   return (
     <div className='relative m-auto w-screen h-screen transition-opacity duration-500 animate-fadeIn'>
@@ -616,7 +712,7 @@ const GameScreen = () => {
         onLoad={() => setIsRendered(true)}
       />
       <div
-        className={`absolute bottom-0 left-0 right-0 m-auto w-full h-full z-50 ${!falling && positionY === startPositionY ? '!z-0' : ''
+        className={`parent absolute bottom-0 left-0 right-0 m-auto w-full h-full z-50 ${!falling && positionY === startPositionY ? '!z-0' : ''
           }`}
         style={{
           maxWidth: !!gameBackgroundElement?.offsetWidth
@@ -644,32 +740,27 @@ const GameScreen = () => {
               : ' w-[65%] bottom-[13.7%] left-[17.3%]'
             } m-auto z-30 object-contain`}
         />
-        <img
-          src={YodelyGuy}
-          alt='YodelyGuy'
-          id='yodely-guy'
-          className={`absolute yodely-guy z-[100] 
-            ${isHidden ? 'opacity-0' : 'opacity-100'}
-            ${falling ? 'fall rotate' : ''
-            }
-          ${outerRocksSize && outerRocksSize.width >= 2560
-              ? 'w-[4.8%] left-[17.4%] bottom-[44.8%]'
-              : outerRocksSize && outerRocksSize.width >= 1920
-                ? 'w-[4.3%] left-[17.5%] bottom-[44.9%]'
-                : 'w-[4.7%] left-[17.3%] bottom-[44.3%]'
-            }`}
-          style={
-            (isGameStarted && positionX !== 0 && positionY !== 0) ||
-              (savedPositionX && savedPositionY)
-              ? {
-                left: `${positionX}px`,
-                bottom: `${positionY}px`,
-                ...fallAnimation,
-              }
-              : {}
-          }
-        />
+        {visible && (
+          <img
+            src={YodelyGuy}
+            alt='YodelyGuy'
+            id='yodely-guy'
+            className={`testCont ${animate ? "animate" : ""}
+            ${outerRocksSize && outerRocksSize.width >= 2560
+                ? 'w-[4.8%] left-[17.4%] bottom-[44.8%]'
+                : outerRocksSize && outerRocksSize.width >= 1920
+                  ? 'w-[4.3%] left-[17.5%] bottom-[44.9%]'
+                  : 'w-[4.7%] left-[17.3%] bottom-[44.3%]'}
+            `}
+
+            style={{
+              left: `${left}%`, bottom: `${bottom}vw`,
+            }}
+          />
+        )}
       </div>
+
+
 
       <div className='absolute bottom-[27px] min-[2560px]:bottom-[24px] left-[50px] w-[70px] min-[2560px]:w-[140px] h-[40px] min-[2560px]:h-[80px] text-[32px] min-[2560px]:text-[64px] bg-[#e3e3e3] text-[#333] font-bold rounded-[5px] flex items-center justify-center z-[9999]'>
         {remainingMoves}
@@ -691,3 +782,5 @@ const GameScreen = () => {
 };
 
 export default GameScreen;
+
+
