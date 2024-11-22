@@ -13,22 +13,22 @@ const DEFAULT_PRODUCTS = [
     productName: 'Gillete Razor',
     productPrice: '8',
     imgSrc: 'https://i.ebayimg.com/images/g/qGYAAOSwxwNj3Ihz/s-l1200.jpg',
-    priceOpened: true,
-    nameOpened: true,
+    priceOpened: false,
+    nameOpened: false,
   },
   {
     productName: 'Teddy Bear',
     productPrice: '18',
     imgSrc: 'https://m.media-amazon.com/images/I/51MnVEDKPwL._AC_.jpg',
-    priceOpened: true,
-    nameOpened: true,
+    priceOpened: false,
+    nameOpened: false,
   },
   {
     productName: 'Funny Mug',
     productPrice: '12',
     imgSrc: 'https://m.media-amazon.com/images/I/61eiW3ZwmXL.jpg',
-    priceOpened: true,
-    nameOpened: true,
+    priceOpened: false,
+    nameOpened: false,
   },
 ];
 
@@ -119,22 +119,22 @@ const ProductScreen = () => {
           productName: data[0].Product,
           productPrice: data[0].Price,
           imgSrc: data[0]['Product Image'],
-          priceOpened: false,
-          nameOpened: false,
+          priceOpened: data[0].priceOpened ?? false,
+          nameOpened: data[0].nameOpened ?? false,
         });
         setProduct('product2', {
           productName: data[1].Product,
           productPrice: data[1].Price,
           imgSrc: data[1]['Product Image'],
-          priceOpened: false,
-          nameOpened: false,
+          priceOpened: data[1].priceOpened ?? false,
+          nameOpened: data[1].nameOpened ?? false,
         });
         setProduct('product3', {
           productName: data[2].Product,
           productPrice: data[2].Price,
           imgSrc: data[2]['Product Image'],
-          priceOpened: false,
-          nameOpened: false,
+          priceOpened: data[2].priceOpened ?? false,
+          nameOpened: data[2].nameOpened ?? false,
         });
         setIsInitialized(true); // Mark initialization complete
       } else {
@@ -200,16 +200,6 @@ const ProductScreen = () => {
               boxShadow:
                 'inset 3px -2px 4px 0 rgba(144, 144, 144, 0.25), inset -2px 0 4px 0 rgba(92, 92, 92, 0.25)',
             }}
-            className="w-[111px] h-[43px] px-1 bg-[#56639d] hover:bg-[#56639d]/70 active:bg-[#56639d]/50 text-[#fff] text-[28px] font-bold rounded-[5px] uppercase transition"
-            onClick={() => navigate(-1)}
-          >
-            Back
-          </button>
-        </div>
-      </div>
-      <SettingsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-    </>
-  );
-};
+            className="w-[111px] h-[43px] px-1 bg-[#56639d] hover:bg-[#56639d]/70 active:bg-[#56639d]/50 text-[#fff] text-[28px] font-bold rounded-[5px] uppercase transition" onClick={() => navigate(-1)} > Back </button> </div> </div> <SettingsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} /> </> ); };
 
 export default ProductScreen;

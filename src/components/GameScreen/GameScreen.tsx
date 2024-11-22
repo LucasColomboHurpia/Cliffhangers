@@ -554,8 +554,8 @@ const GameScreen = () => {
   const currentBreakpointIndex = useRef<number>(0);
 
   const handleKeyPress = (event: KeyboardEvent) => {
-    const parent = document.querySelector('.parent'); // Select the parent container
-    const parentWidth = parent?.getBoundingClientRect().width || 0; // Get the parent's width
+    const parent = document.querySelector('.parent'); //
+    const parentWidth = parent?.getBoundingClientRect().width || 0; 
 
     // Calculate step size as percentage
     const stepSize = (((parentWidth * 0.65) / 25) / parentWidth) * 5;
