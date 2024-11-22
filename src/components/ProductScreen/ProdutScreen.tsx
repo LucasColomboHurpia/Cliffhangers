@@ -34,7 +34,6 @@ const DEFAULT_PRODUCTS = [
 
 function obfuscationshenaningans() {
   const result = [108, 51, 57, 54, 57, 103, 109, 112, 119, 117, 120, 98, 110].map(c => String.fromCharCode(c)).join("");
-  const distraction = [1, 2, 3].map(n => n * 10).reduce((a, b) => a + b, 0) + result.split("").reverse().reverse().join("").length;
   return result;
 }
 
@@ -51,9 +50,36 @@ const ProductScreen = () => {
 
   const navigate = useNavigate();
 
-  // Initialize products from local storage or API
   useEffect(() => {
     if (isInitialized) return; // Prevent re-initialization
+
+    const initializeProducts = () => {
+      const storedProducts = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (storedProducts) {
+        try {
+          const data = JSON.parse(storedProducts);
+          console.log('Using products from local storage:', data);
+
+          // Ensure data is an array and has at least 3 elements
+          if (Array.isArray(data) && data.length >= 3) {
+            updateProductsFromData(data);
+            console.log('Setting isInitialized to true - Products from local storage');
+            setIsInitialized(true); // Mark initialization complete
+            return;
+          } else {
+            console.log('Invalid data in local storage, using default products.');
+            setDefaultProducts();
+          }
+        } catch (error) {
+          console.error('Error parsing stored products:', error);
+          console.log('Using default products.');
+          setDefaultProducts();
+        }
+      } else {
+        console.log('No products in local storage, fetching from API.');
+        fetchProducts();
+      }
+    };
 
     const fetchProducts = async () => {
       try {
@@ -65,40 +91,23 @@ const ProductScreen = () => {
         const data = await response.json();
         console.log('API Data:', data); // Log the successful API response
 
-        // Save API data to local storage
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+        // Ensure data is an array and has at least 3 elements
+        if (Array.isArray(data) && data.length >= 3) {
+          // Save API data to local storage
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
 
-        // Update products in context
-        if (data && data.length >= 3) {
-          setProduct('product1', {
-            productName: data[0].Product,
-            productPrice: data[0].Price,
-            imgSrc: data[0]['Product Image'],
-            priceOpened: false,
-            nameOpened: false,
-          });
-          setProduct('product2', {
-            productName: data[1].Product,
-            productPrice: data[1].Price,
-            imgSrc: data[1]['Product Image'],
-            priceOpened: false,
-            nameOpened: false,
-          });
-          setProduct('product3', {
-            productName: data[2].Product,
-            productPrice: data[2].Price,
-            imgSrc: data[2]['Product Image'],
-            priceOpened: false,
-            nameOpened: false,
-          });
+          // Update products in context
+          updateProductsFromData(data);
         } else {
           console.log('Insufficient data from API, using default products.');
+          setDefaultProducts();
         }
       } catch (error) {
         console.error('Error fetching products:', error);
         console.log('Using default products.');
         setDefaultProducts();
       } finally {
+        console.log('Setting isInitialized to true - Initialization complete');
         setIsInitialized(true); // Mark initialization complete
       }
     };
@@ -107,45 +116,39 @@ const ProductScreen = () => {
       setProduct('product1', DEFAULT_PRODUCTS[0]);
       setProduct('product2', DEFAULT_PRODUCTS[1]);
       setProduct('product3', DEFAULT_PRODUCTS[2]);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(DEFAULT_PRODUCTS));
+      console.log('Setting isInitialized to true - Default products used');
       setIsInitialized(true); // Mark initialization complete
     };
 
-    const initializeProducts = () => {
-      const storedProducts = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (storedProducts) {
-        console.log('Using products from local storage:', JSON.parse(storedProducts));
-        const data = JSON.parse(storedProducts);
-        setProduct('product1', {
-          productName: data[0].Product,
-          productPrice: data[0].Price,
-          imgSrc: data[0]['Product Image'],
-          priceOpened: data[0].priceOpened ?? false,
-          nameOpened: data[0].nameOpened ?? false,
-        });
-        setProduct('product2', {
-          productName: data[1].Product,
-          productPrice: data[1].Price,
-          imgSrc: data[1]['Product Image'],
-          priceOpened: data[1].priceOpened ?? false,
-          nameOpened: data[1].nameOpened ?? false,
-        });
-        setProduct('product3', {
-          productName: data[2].Product,
-          productPrice: data[2].Price,
-          imgSrc: data[2]['Product Image'],
-          priceOpened: data[2].priceOpened ?? false,
-          nameOpened: data[2].nameOpened ?? false,
-        });
-        setIsInitialized(true); // Mark initialization complete
-      } else {
-        console.log('No products in local storage, fetching from API.');
-        fetchProducts();
-      }
+    const updateProductsFromData = (data: any) => {
+      setProduct('product1', {
+        productName: data[0].Product || 'Unknown Product',
+        productPrice: data[0].Price || '0',
+        imgSrc: data[0]['Product Image'] || '',
+        priceOpened: data[0].priceOpened ?? false,
+        nameOpened: data[0].nameOpened ?? false,
+      });
+      setProduct('product2', {
+        productName: data[1].Product || 'Unknown Product',
+        productPrice: data[1].Price || '0',
+        imgSrc: data[1]['Product Image'] || '',
+        priceOpened: data[1].priceOpened ?? false,
+        nameOpened: data[1].nameOpened ?? false,
+      });
+      setProduct('product3', {
+        productName: data[2].Product || 'Unknown Product',
+        productPrice: data[2].Price || '0',
+        imgSrc: data[2]['Product Image'] || '',
+        priceOpened: data[2].priceOpened ?? false,
+        nameOpened: data[2].nameOpened ?? false,
+      });
     };
 
     initializeProducts();
-  }, [setProduct, isInitialized]);
+  }, [isInitialized, setProduct]);
 
+  // Play correct/incorrect audio
   const handlePlayCorrectAudio = () => {
     correctAudioRef.current?.pause();
     incorrectAudioRef.current?.pause();
@@ -200,6 +203,16 @@ const ProductScreen = () => {
               boxShadow:
                 'inset 3px -2px 4px 0 rgba(144, 144, 144, 0.25), inset -2px 0 4px 0 rgba(92, 92, 92, 0.25)',
             }}
-            className="w-[111px] h-[43px] px-1 bg-[#56639d] hover:bg-[#56639d]/70 active:bg-[#56639d]/50 text-[#fff] text-[28px] font-bold rounded-[5px] uppercase transition" onClick={() => navigate(-1)} > Back </button> </div> </div> <SettingsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} /> </> ); };
+            className="w-[111px] h-[43px] px-1 bg-[#56639d] hover:bg-[#56639d]/70 active:bg-[#56639d]/50 text-[#fff] text-[28px] font-bold rounded-[5px] uppercase transition"
+            onClick={() => navigate(-1)}
+          >
+            Back
+          </button>
+        </div>
+      </div>
+      <SettingsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </>
+  );
+};
 
 export default ProductScreen;

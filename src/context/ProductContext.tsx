@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export interface ProductType {
   imgSrc: string;
@@ -16,9 +16,11 @@ export interface ProductsState {
 
 interface ProductsContextProps {
   products: ProductsState;
-  setProduct: (key: keyof ProductsState, value: Partial<ProductType>) => void; // Partial allows partial updates
+  setProduct: (key: keyof ProductsState, value: Partial<ProductType>) => void;
   resetProducts: () => void;
 }
+
+const LOCAL_STORAGE_KEY = 'productsData';
 
 const initialProductsValues: ProductsState = {
   product1: {
@@ -51,9 +53,16 @@ const ProductsContext = createContext<ProductsContextProps | undefined>(
 export const ProductsProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [products, setProducts] = useState<ProductsState>(
-    initialProductsValues,
-  );
+  // Initialize products from local storage if available, otherwise use initial values
+  const [products, setProducts] = useState<ProductsState>(() => {
+    const storedProducts = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return storedProducts ? JSON.parse(storedProducts) : initialProductsValues;
+  });
+
+  // Save products to local storage whenever products state changes
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(products));
+  }, [products]);
 
   const setProduct = (key: keyof ProductsState, value: Partial<ProductType>) => {
     setProducts((prev) => ({
@@ -67,6 +76,7 @@ export const ProductsProvider: React.FC<{ children: ReactNode }> = ({
 
   const resetProducts = () => {
     setProducts(initialProductsValues); // Reset to initial values
+    localStorage.removeItem(LOCAL_STORAGE_KEY); // Clear local storage
   };
 
   return (
